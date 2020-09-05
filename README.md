@@ -32,6 +32,15 @@ You can install all packages using the following command. Please note that the s
 pip install -r requirements.txt
 ```
 
+## Running with Docker
+You can also use docker if you know what it is and have some knowledge on how to use it. Here are the steps to run the tool with docker.
+
+- First you must build the container: `docker build . -t surpriver`
+- Then you need to copy the contents of docker-compose.yml.template to a new file called docker-compose.yml
+- Replace `<C:\\path\\to\\this\\dir>` with the directory you are working in.
+- Run the container by executing `docker-compose up -d`
+- Execute any of the commands below by prepending `docker exec -it surpriver` to your command line.
+
 ### Predictions for Today
 If you want to go ahead and directly get the most anomalous stocks for today, you can simple run the following command to get the stocks with the most unusual patterns. We will dive deeper into the command in the following sections.
 
@@ -50,10 +59,11 @@ This command will give you the top **25 stocks** that had the highest anomaly sc
 - **is_load_from_dictionary**: Whether to load the data from dictionary or download it from yahoo finance directly. You can use the dictionary you saved above here for multiple runs.
 - **is_test**: You can actually test the predictions by leaving some of the recent data as future data and analyzing whether the most anomalous stocks moved the most after their predictions. If this value is 1, the value of **future_bars** should be greater than 5.
 - **future_bars**: These number of bars will be saved from the recent history for testing purposes.
+- **output_format**: The format for results. If you pass CLI, the results will be printed to the console. If you pass JSON, a JSON file will be created with results for today's date. The default is CLI.
 
 #####  When you have the data dictionary saved, you can just run the following command.
 ```
-python detection_engine.py --top_n 25 --min_volume 5000 --data_granularity_minutes 60 --history_to_use 14 --is_load_from_dictionary 1 --data_dictionary_path 'dictionaries/data_dict.npy' --is_save_dictionary 0 --is_test 0 --future_bars 0
+python detection_engine.py --top_n 25 --min_volume 5000 --data_granularity_minutes 60 --history_to_use 14 --is_load_from_dictionary 1 --data_dictionary_path 'dictionaries/data_dict.npy' --is_save_dictionary 0 --is_test 0 --future_bars 0 --output_format 'CLI'
 ```
 Notice the change in **is_save_dictionary** and **is_load_from_dictionary**.
 
@@ -101,6 +111,10 @@ Historical volatility for Normal Stocks: **2.076**
 ```
 
 You can see that historical volatility for normal vs anomalous stocks is not that different. However, the difference in total absolute future change is double for anomalous stocks as compared to normal stocks. 
+
+### Results
+We will try to post the top 25 results for a single set of parameters every week.
+##### August 31, 2020 to September 05, 2020: https://pastebin.com/L5T2BYUx
 
 ### Limitations
 The tool only finds stocks that have some unusual behavior in their price and volume action combined. It does not predict which direction the stock is going to move. That might be a feature that I'll implement in the future but for right now, you'll need to look at the charts and do your DD to figure that out.
